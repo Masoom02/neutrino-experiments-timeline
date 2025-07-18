@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Neutrino Experiments Timeline</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 2000px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #4fc3f7;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(79, 195, 247, 0.5);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #81c784;
+        }
+        
+        select {
+            padding: 8px 15px;
+            border: 2px solid #4fc3f7;
+            border-radius: 8px;
+            background: rgba(79, 195, 247, 0.1);
+            color: #e0e0e0;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        select:hover {
+            background: rgba(79, 195, 247, 0.2);
+            box-shadow: 0 0 15px rgba(79, 195, 247, 0.3);
+        }
+        
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(79, 195, 247, 0.3);
+            overflow-x: auto;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.95);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 1000;
+            max-width: 450px;
+            border: 2px solid #4fc3f7;
+            line-height: 1.5;
+            display: none;
+            box-shadow: 0 0 20px rgba(79, 195, 247, 0.3);
+        }
+        
+        .experiment-segment {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .experiment-segment:hover {
+            stroke: #4fc3f7;
+            stroke-width: 3;
+            filter: brightness(1.3);
+        }
+        
+        .axis text {
+            fill: #e0e0e0;
+            font-size: 12px;
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: 500;
+        }
+        
+        .axis path, .axis line {
+            stroke: #e0e0e0;
+        }
+        
+        .legend text {
+            fill: #e0e0e0;
+            font-size: 12px;
+        }
+        
+        .stats-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(79, 195, 247, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(79, 195, 247, 0.3);
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4fc3f7;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #81c784;
+        }
+        
+        .chart-title {
+            text-align: center;
+            font-size: 1.8em;
+            color: #4fc3f7;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌌 Comprehensive Neutrino Experiments Timeline</h1>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label for="filterType">Filter by Type:</label>
+                <select id="filterType">
+                    <option value="all">All Experiments (53)</option>
+                    <option value="solar">Solar Neutrinos (7)</option>
+                    <option value="reactor">Reactor Neutrinos (11)</option>
+                    <option value="accelerator">Accelerator Neutrinos (15)</option>
+                    <option value="atmospheric">Atmospheric Neutrinos (5)</option>
+                    <option value="astrophysical">Astrophysical Neutrinos (6)</option>
+                    <option value="geoneutrino">Geoneutrinos (4)</option>
+                    <option value="double-beta">Double Beta Decay (3)</option>
+                    <option value="cosmogenic">Cosmogenic/Direct Mass (2)</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label for="accessibilityMode">Accessibility:</label>
+                <select id="accessibilityMode">
+                    <option value="color">Color Only</option>
+                    <option value="highContrast">High Contrast</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <div class="chart-title">Neutrino Experiments Timeline (1960-2050)</div>
+            <div id="chart"></div>
+        </div>
+        
+        <div class="stats-panel">
+            <div class="stat-card">
+                <div class="stat-value" id="totalExperiments">0</div>
+                <div class="stat-label">Total Experiments</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="multiSourceCount">0</div>
+                <div class="stat-label">Multi-Source Experiments</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="activeExperiments">0</div>
+                <div class="stat-label">Currently Active</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avgCollabSize">0</div>
+                <div class="stat-label">Avg. Collaboration Size</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="timeSpan">0</div>
+                <div class="stat-label">Total Time Span (Years)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="countryCount">0</div>
+                <div class="stat-label">Countries Involved</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tooltip" id="tooltip"></div>
+    
+    <script>
+        // Complete dataset - all 53 experiments
+        const experiments = [
+            {name: "Homestake", startYear: 1967, endYear: 1994, sources: ["solar"], energy: "0.8-20 MeV", location: "Homestake Mine, South Dakota, USA", physics: "Solar neutrino problem", flavor: "Electron neutrinos", collaborationSize: 10, leadCountry: "USA", status: "Completed", type: "solar", currentStatus: "Historic foundation"},
+            {name: "SAGE", startYear: 1988, endYear: 2009, sources: ["solar"], energy: "0.2-20 MeV", location: "Baksan, Russia", physics: "Solar neutrino flux", flavor: "Electron neutrinos", collaborationSize: 50, leadCountry: "Russia", status: "Completed", type: "solar", currentStatus: "Confirmed deficit"},
+            {name: "GALLEX/GNO", startYear: 1991, endYear: 2003, sources: ["solar"], energy: "0.2-20 MeV", location: "Gran Sasso, Italy", physics: "Solar neutrino detection", flavor: "Electron neutrinos", collaborationSize: 80, leadCountry: "Germany", status: "Completed", type: "solar", currentStatus: "pp-neutrino detection"},
+            {name: "Kamiokande", startYear: 1983, endYear: 1996, sources: ["solar", "atmospheric"], energy: "5 MeV-10 GeV", location: "Kamioka Mine, Japan", physics: "Solar & atmospheric anomalies", flavor: "Electron and muon neutrinos", collaborationSize: 50, leadCountry: "Japan", status: "Completed", type: "solar", currentStatus: "Water Cherenkov pioneer"},
+            {name: "Super-Kamiokande", startYear: 1996, endYear: 2040, sources: ["solar", "atmospheric", "accelerator"], energy: "5 MeV-100 GeV", location: "Kamioka Mine, Japan", physics: "Neutrino oscillations", flavor: "All neutrino flavors", collaborationSize: 500, leadCountry: "Japan", status: "Active", type: "atmospheric", currentStatus: "Gadolinium upgrade"},
+            {name: "SNO", startYear: 1999, endYear: 2006, sources: ["solar"], energy: "5-20 MeV", location: "Sudbury, Canada", physics: "Solar oscillations", flavor: "All flavors", collaborationSize: 100, leadCountry: "Canada", status: "Completed", type: "solar", currentStatus: "Nobel Prize results"},
+            {name: "Borexino", startYear: 2007, endYear: 2021, sources: ["solar", "geoneutrino"], energy: "0.2-20 MeV", location: "Gran Sasso, Italy", physics: "Solar spectroscopy", flavor: "Electron neutrinos", collaborationSize: 100, leadCountry: "Italy", status: "Completed", type: "solar", currentStatus: "CNO cycle detection"},
+            {name: "Chooz", startYear: 1997, endYear: 1998, sources: ["reactor"], energy: "1-10 MeV", location: "Chooz, France", physics: "θ13 upper limit", flavor: "Electron neutrinos", collaborationSize: 60, leadCountry: "France", status: "Completed", type: "reactor", currentStatus: "θ13 limit"},
+            {name: "Palo Verde", startYear: 1998, endYear: 2002, sources: ["reactor"], energy: "1-10 MeV", location: "Arizona, USA", physics: "Reactor oscillations", flavor: "Electron neutrinos", collaborationSize: 40, leadCountry: "USA", status: "Completed", type: "reactor", currentStatus: "Oscillation search"},
+            {name: "KamLAND", startYear: 2002, endYear: 2030, sources: ["reactor", "geoneutrino"], energy: "1-10 MeV", location: "Kamioka, Japan", physics: "Reactor oscillations", flavor: "Electron neutrinos", collaborationSize: 80, leadCountry: "Japan", status: "Active", type: "reactor", currentStatus: "Geoneutrino pioneer"},
+            {name: "Double Chooz", startYear: 2011, endYear: 2018, sources: ["reactor"], energy: "1-10 MeV", location: "Chooz, France", physics: "θ13 measurement", flavor: "Electron neutrinos", collaborationSize: 150, leadCountry: "France", status: "Completed", type: "reactor", currentStatus: "θ13 measured"},
+            {name: "Daya Bay", startYear: 2011, endYear: 2020, sources: ["reactor"], energy: "1-10 MeV", location: "Daya Bay, China", physics: "θ13 measurement", flavor: "Electron neutrinos", collaborationSize: 240, leadCountry: "China", status: "Completed", type: "reactor", currentStatus: "Precise θ13"},
+            {name: "RENO", startYear: 2011, endYear: 2021, sources: ["reactor"], energy: "1-10 MeV", location: "Yonggwang, Korea", physics: "θ13 measurement", flavor: "Electron neutrinos", collaborationSize: 120, leadCountry: "South Korea", status: "Completed", type: "reactor", currentStatus: "θ13 confirmation"},
+            {name: "JUNO", startYear: 2024, endYear: 2045, sources: ["reactor", "geoneutrino"], energy: "1-10 MeV", location: "Jiangmen, China", physics: "Mass hierarchy", flavor: "Electron neutrinos", collaborationSize: 700, leadCountry: "China", status: "Active", type: "reactor", currentStatus: "Largest scintillator"},
+            {name: "DANSS", startYear: 2016, endYear: 2030, sources: ["reactor"], energy: "1-10 MeV", location: "Kalinin NPP, Russia", physics: "Sterile search", flavor: "Electron neutrinos", collaborationSize: 30, leadCountry: "Russia", status: "Active", type: "reactor", currentStatus: "Movable detector"},
+            {name: "STEREO", startYear: 2016, endYear: 2020, sources: ["reactor"], energy: "1-10 MeV", location: "Grenoble, France", physics: "Reactor anomaly", flavor: "Electron neutrinos", collaborationSize: 50, leadCountry: "France", status: "Completed", type: "reactor", currentStatus: "Anomaly investigation"},
+            {name: "PROSPECT", startYear: 2018, endYear: 2022, sources: ["reactor"], energy: "1-10 MeV", location: "Oak Ridge, USA", physics: "Sterile neutrinos", flavor: "Electron neutrinos", collaborationSize: 70, leadCountry: "USA", status: "Completed", type: "reactor", currentStatus: "eV-scale search"},
+            {name: "NEUTRINO-4", startYear: 2014, endYear: 2025, sources: ["reactor"], energy: "1-10 MeV", location: "Dimitrovgrad, Russia", physics: "Sterile search", flavor: "Electron neutrinos", collaborationSize: 20, leadCountry: "Russia", status: "Active", type: "reactor", currentStatus: "Claims evidence"},
+            {name: "LSND", startYear: 1993, endYear: 1998, sources: ["accelerator"], energy: "20-60 MeV", location: "Los Alamos, USA", physics: "Short-baseline", flavor: "Muon to electron", collaborationSize: 40, leadCountry: "USA", status: "Completed", type: "accelerator", currentStatus: "Controversial signal"},
+            {name: "MiniBooNE", startYear: 2002, endYear: 2017, sources: ["accelerator"], energy: "0.5-1 GeV", location: "Fermilab, USA", physics: "LSND test", flavor: "Muon to electron", collaborationSize: 80, leadCountry: "USA", status: "Completed", type: "accelerator", currentStatus: "Low-energy excess"},
+            {name: "K2K", startYear: 1999, endYear: 2004, sources: ["accelerator"], energy: "1.3 GeV", location: "KEK to Super-K", physics: "Long-baseline", flavor: "Muon neutrinos", collaborationSize: 120, leadCountry: "Japan", status: "Completed", type: "accelerator", currentStatus: "First long-baseline"},
+            {name: "MINOS", startYear: 2005, endYear: 2012, sources: ["accelerator", "atmospheric"], energy: "1-10 GeV", location: "Fermilab to Soudan", physics: "Long-baseline", flavor: "Muon neutrinos", collaborationSize: 180, leadCountry: "USA", status: "Completed", type: "accelerator", currentStatus: "Precise Δm²"},
+            {name: "MINOS+", startYear: 2013, endYear: 2016, sources: ["accelerator", "atmospheric"], energy: "1-10 GeV", location: "Fermilab to Soudan", physics: "Sterile search", flavor: "Muon neutrinos", collaborationSize: 100, leadCountry: "USA", status: "Completed", type: "accelerator", currentStatus: "Higher energy"},
+            {name: "OPERA", startYear: 2008, endYear: 2018, sources: ["accelerator"], energy: "17 GeV", location: "CERN to Gran Sasso", physics: "Tau appearance", flavor: "Muon to tau", collaborationSize: 200, leadCountry: "Italy", status: "Completed", type: "accelerator", currentStatus: "Direct tau detection"},
+            {name: "ICARUS", startYear: 2010, endYear: 2014, sources: ["accelerator"], energy: "17 GeV", location: "CERN to Gran Sasso", physics: "Sterile search", flavor: "Muon neutrinos", collaborationSize: 150, leadCountry: "Italy", status: "Completed", type: "accelerator", currentStatus: "Liquid argon TPC"},
+            {name: "T2K", startYear: 2010, endYear: 2035, sources: ["accelerator"], energy: "0.6 GeV", location: "J-PARC to Super-K", physics: "CP violation", flavor: "Muon to electron", collaborationSize: 500, leadCountry: "Japan", status: "Active", type: "accelerator", currentStatus: "CP search"},
+            {name: "NOvA", startYear: 2014, endYear: 2030, sources: ["accelerator"], energy: "1-5 GeV", location: "Fermilab to Ash River", physics: "Mass hierarchy", flavor: "Muon to electron", collaborationSize: 250, leadCountry: "USA", status: "Active", type: "accelerator", currentStatus: "Normal hierarchy hints"},
+            {name: "MicroBooNE", startYear: 2015, endYear: 2021, sources: ["accelerator"], energy: "0.8 GeV", location: "Fermilab, USA", physics: "MiniBooNE investigation", flavor: "Muon to electron", collaborationSize: 170, leadCountry: "USA", status: "Completed", type: "accelerator", currentStatus: "Photon hypothesis ruled out"},
+            {name: "SBND", startYear: 2023, endYear: 2030, sources: ["accelerator"], energy: "0.8 GeV", location: "Fermilab, USA", physics: "Short-baseline", flavor: "Muon neutrinos", collaborationSize: 200, leadCountry: "USA", status: "Active", type: "accelerator", currentStatus: "SBN program"},
+            {name: "COHERENT", startYear: 2017, endYear: 2030, sources: ["accelerator"], energy: "10-50 MeV", location: "Oak Ridge, USA", physics: "CEvNS", flavor: "All flavors", collaborationSize: 80, leadCountry: "USA", status: "Active", type: "accelerator", currentStatus: "First CEvNS"},
+            {name: "DUNE", startYear: 2028, endYear: 2050, sources: ["accelerator"], energy: "1-5 GeV", location: "Fermilab to South Dakota", physics: "CP violation", flavor: "Muon to electron", collaborationSize: 1200, leadCountry: "USA", status: "Planned", type: "accelerator", currentStatus: "Under construction"},
+            {name: "Hyper-Kamiokande", startYear: 2027, endYear: 2050, sources: ["solar", "atmospheric", "accelerator"], energy: "5 MeV-100 GeV", location: "Kamioka, Japan", physics: "CP violation", flavor: "All flavors", collaborationSize: 600, leadCountry: "Japan", status: "Planned", type: "accelerator", currentStatus: "Under construction"},
+            {name: "ESSnuSB", startYear: 2030, endYear: 2050, sources: ["accelerator"], energy: "0.2-0.6 GeV", location: "ESS to Garpenberg", physics: "CP violation", flavor: "Muon to electron", collaborationSize: 400, leadCountry: "Sweden", status: "Planned", type: "accelerator", currentStatus: "Design phase"},
+            {name: "IMB", startYear: 1982, endYear: 1991, sources: ["atmospheric"], energy: "100 MeV-10 GeV", location: "Ohio, USA", physics: "Atmospheric anomaly", flavor: "Muon and electron", collaborationSize: 40, leadCountry: "USA", status: "Completed", type: "atmospheric", currentStatus: "Early anomaly evidence"},
+            {name: "MACRO", startYear: 1989, endYear: 2000, sources: ["atmospheric"], energy: "1-100 GeV", location: "Gran Sasso, Italy", physics: "Atmospheric oscillations", flavor: "Muon neutrinos", collaborationSize: 120, leadCountry: "Italy", status: "Completed", type: "atmospheric", currentStatus: "Confirmed anomaly"},
+            {name: "Soudan 2", startYear: 1989, endYear: 2001, sources: ["atmospheric"], energy: "1-10 GeV", location: "Soudan Mine, USA", physics: "Atmospheric oscillations", flavor: "Muon neutrinos", collaborationSize: 80, leadCountry: "USA", status: "Completed", type: "atmospheric", currentStatus: "Atmospheric studies"},
+            {name: "IceCube", startYear: 2010, endYear: 2040, sources: ["atmospheric", "astrophysical"], energy: "10 GeV-10 PeV", location: "South Pole", physics: "High-energy astronomy", flavor: "All flavors", collaborationSize: 300, leadCountry: "USA", status: "Active", type: "atmospheric", currentStatus: "Cosmic sources"},
+            {name: "AMANDA", startYear: 1996, endYear: 2009, sources: ["astrophysical"], energy: "50 GeV-10 TeV", location: "South Pole", physics: "High-energy astronomy", flavor: "All flavors", collaborationSize: 120, leadCountry: "USA", status: "Completed", type: "astrophysical", currentStatus: "IceCube predecessor"},
+            {name: "ANTARES", startYear: 2008, endYear: 2022, sources: ["astrophysical"], energy: "10 GeV-10 PeV", location: "Mediterranean Sea", physics: "High-energy astronomy", flavor: "All flavors", collaborationSize: 150, leadCountry: "France", status: "Completed", type: "astrophysical", currentStatus: "Underwater telescope"},
+            {name: "KM3NeT", startYear: 2016, endYear: 2035, sources: ["astrophysical"], energy: "1 GeV-10 PeV", location: "Mediterranean Sea", physics: "High-energy astronomy", flavor: "All flavors", collaborationSize: 280, leadCountry: "Netherlands", status: "Active", type: "astrophysical", currentStatus: "ANTARES successor"},
+            {name: "Baikal-GVD", startYear: 2016, endYear: 2030, sources: ["astrophysical"], energy: "10 GeV-10 PeV", location: "Lake Baikal", physics: "High-energy astronomy", flavor: "All flavors", collaborationSize: 100, leadCountry: "Russia", status: "Active", type: "astrophysical", currentStatus: "Freshwater telescope"},
+            {name: "ANITA", startYear: 2006, endYear: 2016, sources: ["astrophysical"], energy: "10^18-10^21 eV", location: "Antarctica balloon", physics: "UHE detection", flavor: "All flavors", collaborationSize: 60, leadCountry: "USA", status: "Completed", type: "astrophysical", currentStatus: "Balloon-borne"},
+            {name: "CUORE", startYear: 2017, endYear: 2030, sources: ["double-beta"], energy: "2.5 MeV", location: "Gran Sasso, Italy", physics: "0νββ decay", flavor: "Majorana", collaborationSize: 150, leadCountry: "Italy", status: "Active", type: "double-beta", currentStatus: "Majorana search"},
+            {name: "LEGEND", startYear: 2021, endYear: 2035, sources: ["double-beta"], energy: "2.0 MeV", location: "Gran Sasso & Sanford", physics: "0νββ decay", flavor: "Majorana", collaborationSize: 200, leadCountry: "Germany", status: "Active", type: "double-beta", currentStatus: "Next-gen 0νββ"},
+            {name: "NEXT", startYear: 2016, endYear: 2030, sources: ["double-beta"], energy: "2.5 MeV", location: "Canfranc, Spain", physics: "0νββ decay", flavor: "Majorana", collaborationSize: 120, leadCountry: "Spain", status: "Active", type: "double-beta", currentStatus: "Xenon TPC"},
+            {name: "KATRIN", startYear: 2018, endYear: 2030, sources: ["cosmogenic"], energy: "18.6 keV", location: "Karlsruhe, Germany", physics: "Direct mass", flavor: "Electron", collaborationSize: 150, leadCountry: "Germany", status: "Active", type: "cosmogenic", currentStatus: "Precise mass limit"},
+            {name: "Project 8", startYear: 2019, endYear: 2035, sources: ["cosmogenic"], energy: "18.6 keV", location: "Yale & PNNL", physics: "Direct mass via CRES", flavor: "Electron", collaborationSize: 80, leadCountry: "USA", status: "Active", type: "cosmogenic", currentStatus: "CRES technique"},
+            {name: "SNO+", startYear: 2017, endYear: 2030, sources: ["solar", "geoneutrino", "reactor"], energy: "0.2-20 MeV", location: "Sudbury, Canada", physics: "Multi-purpose", flavor: "Electron", collaborationSize: 120, leadCountry: "Canada", status: "Active", type: "solar", currentStatus: "Liquid scintillator"}
+        ];
+
+        // Source colors
+        const sourceColors = {
+            solar: "#66C2A5",
+            reactor: "#FC8D62", 
+            accelerator: "#8DA0CB",
+            atmospheric: "#E78AC3",
+            astrophysical: "#A6D854",
+            geoneutrino: "#E5C494",
+            "double-beta": "#B3B3B3",
+            cosmogenic: "#FFD92F"
+        };
+
+        let currentFilter = "all";
+        let accessibilityMode = "color";
+
+        function getFilteredData() {
+            if (currentFilter === "all") return experiments;
+            return experiments.filter(d => d.sources.includes(currentFilter));
+        }
+
+        function getSourceColor(source) {
+            if (accessibilityMode === "highContrast") {
+                const highContrastColors = {
+                    solar: "#000000", reactor: "#FFFFFF", accelerator: "#0000FF",
+                    atmospheric: "#FF0000", astrophysical: "#00FF00", geoneutrino: "#FFFF00",
+                    "double-beta": "#FF00FF", cosmogenic: "#00FFFF"
+                };
+                return highContrastColors[source] || "#000000";
+            }
+            return sourceColors[source] || "#95A5A6";
+        }
+
+        function createTimeline() {
+            console.log("Creating timeline...");
+            
+            const data = getFilteredData();
+            console.log("Experiments to display:", data.length);
+            
+            const container = d3.select("#chart");
+            container.selectAll("*").remove();
+
+            // MASSIVE spacing - the key fix
+            const margin = { top: 60, right: 400, bottom: 80, left: 400 };
+            const width = 1400 - margin.left - margin.right;
+            const height = data.length * 50; // 50px per experiment - MUCH more spacing
+
+            const svg = container.append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom);
+
+            const g = svg.append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            // Sort by start year
+            data.sort((a, b) => a.startYear - b.startYear);
+
+            const xScale = d3.scaleLinear()
+                .domain([1960, 2055])
+                .range([0, width]);
+
+            const yScale = d3.scaleBand()
+                .domain(data.map(d => d.name))
+                .range([0, height])
+                .padding(0.1); // Minimal padding since we have huge height
+
+            console.log("Y scale bandwidth:", yScale.bandwidth());
+
+            // Add axes
+            g.append("g")
+                .attr("class", "axis")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(xScale).tickFormat(d3.format("d")));
+
+            g.append("g")
+                .attr("class", "axis")
+                .call(d3.axisLeft(yScale));
+
+            // Create bars
+            data.forEach(d => {
+                const barWidth = xScale(d.endYear) - xScale(d.startYear);
+                const barHeight = yScale.bandwidth();
+                const segmentWidth = barWidth / d.sources.length;
+                
+                d.sources.forEach((source, index) => {
+                    const segmentX = xScale(d.startYear) + (index * segmentWidth);
+                    
+                    g.append("rect")
+                        .attr("class", "experiment-segment")
+                        .attr("x", segmentX)
+                        .attr("y", yScale(d.name))
+                        .attr("width", segmentWidth)
+                        .attr("height", barHeight)
+                        .attr("fill", getSourceColor(source))
+                        .attr("opacity", 0.85)
+                        .attr("stroke", "#2c3e50")
+                        .attr("stroke-width", 1)
+                        .on("mouseover", function(event) {
+                            showTooltip(event, d, source);
+                        })
+                        .on("mouseout", function() {
+                            hideTooltip();
+                        });
+                        
+                    // Add dividers between segments
+                    if (index > 0) {
+                        g.append("line")
+                            .attr("x1", segmentX)
+                            .attr("x2", segmentX)
+                            .attr("y1", yScale(d.name))
+                            .attr("y2", yScale(d.name) + barHeight)
+                            .attr("stroke", "#ffffff")
+                            .attr("stroke-width", 1)
+                            .attr("opacity", 0.7);
+                    }
+                });
+            });
+
+            // Add legend
+            const legend = svg.append("g")
+                .attr("class", "legend")
+                .attr("transform", `translate(${width + margin.left + 20}, ${margin.top})`);
+
+            legend.append("text")
+                .attr("x", 0)
+                .attr("y", 0)
+                .style("font-size", "14px")
+                .style("font-weight", "bold")
+                .style("fill", "#4fc3f7")
+                .text("Neutrino Sources");
+
+            const sources = ["solar", "reactor", "accelerator", "atmospheric", "astrophysical", "geoneutrino", "double-beta", "cosmogenic"];
+            const legendGroups = legend.selectAll(".legend-item")
+                .data(sources)
+                .enter().append("g")
+                .attr("class", "legend-item")
+                .attr("transform", (d, i) => `translate(0, ${i * 25 + 20})`);
+
+            legendGroups.append("rect")
+                .attr("width", 18)
+                .attr("height", 18)
+                .attr("fill", d => getSourceColor(d))
+                .attr("opacity", 0.85)
+                .attr("stroke", "#2c3e50")
+                .attr("stroke-width", 1);
+
+            legendGroups.append("text")
+                .attr("x", 25)
+                .attr("y", 14)
+                .text(d => d.charAt(0).toUpperCase() + d.slice(1))
+                .style("font-size", "12px")
+                .style("fill", "#e0e0e0");
+
+            console.log("Timeline created successfully");
+        }
+
+        function showTooltip(event, d, highlightedSource) {
+            const tooltip = document.getElementById("tooltip");
+            tooltip.style.display = "block";
+            tooltip.style.left = (event.pageX + 10) + "px";
+            tooltip.style.top = (event.pageY - 10) + "px";
+            
+            const sourcesText = highlightedSource ? 
+                `<strong>This segment:</strong> ${highlightedSource.charAt(0).toUpperCase() + highlightedSource.slice(1)} neutrinos<br><strong>All sources:</strong> ${d.sources.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(", ")}` :
+                `<strong>Sources:</strong> ${d.sources.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(", ")}`;
+            
+            tooltip.innerHTML = `
+                <strong>${d.name}</strong> (${d.startYear}-${d.endYear})<br>
+                ${sourcesText}<br>
+                <strong>Energy:</strong> ${d.energy}<br>
+                <strong>Location:</strong> ${d.location}<br>
+                <strong>Physics:</strong> ${d.physics}<br>
+                <strong>Flavors:</strong> ${d.flavor}<br>
+                <strong>Status:</strong> ${d.currentStatus}<br>
+                <strong>Collaboration:</strong> ${d.collaborationSize} people<br>
+                <strong>Lead Country:</strong> ${d.leadCountry}
+            `;
+        }
+
+        function hideTooltip() {
+            document.getElementById("tooltip").style.display = "none";
+        }
+
+        function updateStats() {
+            const filtered = getFilteredData();
+            const multiSource = filtered.filter(d => d.sources.length > 1).length;
+            const active = filtered.filter(d => d.status === "Active").length;
+            const avgCollab = Math.round(filtered.reduce((sum, d) => sum + d.collaborationSize, 0) / filtered.length);
+            const timeSpan = Math.max(...filtered.map(d => d.endYear)) - Math.min(...filtered.map(d => d.startYear));
+            const countries = new Set(filtered.map(d => d.leadCountry)).size;
+
+            document.getElementById("totalExperiments").textContent = filtered.length;
+            document.getElementById("multiSourceCount").textContent = multiSource;
+            document.getElementById("activeExperiments").textContent = active;
+            document.getElementById("avgCollabSize").textContent = avgCollab;
+            document.getElementById("timeSpan").textContent = timeSpan;
+            document.getElementById("countryCount").textContent = countries;
+        }
+
+        function updateVisualization() {
+            createTimeline();
+            updateStats();
+        }
+
+        // Event listeners
+        document.getElementById("filterType").addEventListener("change", function() {
+            currentFilter = this.value;
+            updateVisualization();
+        });
+
+        document.getElementById("accessibilityMode").addEventListener("change", function() {
+            accessibilityMode = this.value;
+            updateVisualization();
+        });
+
+        // Initialize
+        console.log("Initializing with", experiments.length, "experiments");
+        updateVisualization();
+    </script>
+</body>
+</html>
