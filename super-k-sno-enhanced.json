@@ -1,0 +1,92 @@
+{
+  "experiments": [
+    {
+      "name": "Super-Kamiokande",
+      "basicData": {
+        "startYear": 1996,
+        "endYear": 2040,
+        "sources": ["solar", "atmospheric", "accelerator"],
+        "energy": "5 MeV-100 GeV",
+        "location": "Kamioka Mine, Japan",
+        "collaborationSize": 500,
+        "leadCountry": "Japan",
+        "status": "Active"
+      },
+      "enhancedData": {
+        "oscillationParameters": {
+          "measured": ["Δm²₂₃", "sin²2θ₂₃", "sin²2θ₁₃"],
+          "values": "Δm²₂₃ = 2.5×10⁻³ eV², sin²2θ₂₃ ≈ 1.0 (maximal mixing)",
+          "precision": "Leading measurements of atmospheric oscillation parameters"
+        },
+        "interactionChannels": ["CC", "NC", "ES"],
+        "detectionMethod": "Water Cherenkov detector, 50,000 tonnes ultrapure water, 11,146 PMTs",
+        "anomalies": {
+          "discovered": ["Atmospheric neutrino anomaly - zenith angle dependence (1998)"],
+          "confirmed": ["Neutrino oscillations", "Solar neutrino deficit", "Tau neutrino appearance"],
+          "resolved": ["Atmospheric neutrino problem - explained via νμ→ντ oscillations"]
+        },
+        "keyResults": [
+          "First strong evidence of neutrino oscillations (1998) - Nobel Prize 2015",
+          "Demonstrated nearly maximal mixing between muon and tau neutrinos",
+          "Upward-going muon neutrinos show 50% deficit compared to downward",
+          "Confirmed solar neutrino oscillations (1999)",
+          "Observed oscillatory behavior in L/E distribution",
+          "Matter effect measurements through Earth",
+          "Currently: Gadolinium upgrade for enhanced supernova detection"
+        ],
+        "publications": {
+          "majorPapers": "500+",
+          "citations": "50,000+",
+          "keyPaper": "Phys. Rev. Lett. 81, 1562 (1998) - Evidence for oscillation"
+        },
+        "physicsGoals": "Atmospheric and solar neutrino oscillations, proton decay search, supernova watch",
+        "flavors": "All three flavors (νe, νμ, ντ)",
+        "nobelPrize": "Takaaki Kajita - 2015 Nobel Prize in Physics"
+      }
+    },
+    {
+      "name": "SNO",
+      "basicData": {
+        "startYear": 1999,
+        "endYear": 2006,
+        "sources": ["solar"],
+        "energy": "5-20 MeV",
+        "location": "Sudbury, Ontario, Canada",
+        "collaborationSize": 100,
+        "leadCountry": "Canada",
+        "status": "Completed"
+      },
+      "enhancedData": {
+        "oscillationParameters": {
+          "measured": ["Δm²₁₂", "tan²θ₁₂"],
+          "values": "Δm²₁₂ = 7.5×10⁻⁵ eV², tan²θ₁₂ ≈ 0.45",
+          "precision": "Definitive solar neutrino oscillation parameters"
+        },
+        "interactionChannels": ["CC", "NC", "ES"],
+        "detectionMethod": "Heavy water Cherenkov detector, 1000 tonnes D₂O, 9,456 PMTs",
+        "anomalies": {
+          "discovered": [],
+          "confirmed": ["Solar neutrino flavor change", "Total solar neutrino flux matches SSM predictions"],
+          "resolved": ["Solar neutrino problem - νe transforms to νμ and ντ via MSW effect"]
+        },
+        "keyResults": [
+          "First direct evidence that solar neutrinos change flavor (2001)",
+          "Measured total active neutrino flux: matches Standard Solar Model",
+          "CC reaction: electron neutrinos only (deficit observed)",
+          "NC reaction: all flavors equally (no deficit - proves flavor transformation)",
+          "Definitively resolved 30-year solar neutrino problem",
+          "Three phases: D₂O, Salt, NCD array for different sensitivities",
+          "Combined with Super-K to establish LMA-MSW solution"
+        ],
+        "publications": {
+          "majorPapers": "100+",
+          "citations": "20,000+",
+          "keyPaper": "Phys. Rev. Lett. 87, 071301 (2001) - First results"
+        },
+        "physicsGoals": "Direct measurement of solar neutrino flavor transformation, total solar neutrino flux",
+        "flavors": "Electron neutrinos (CC), all flavors (NC)",
+        "nobelPrize": "Arthur B. McDonald - 2015 Nobel Prize in Physics"
+      }
+    }
+  ]
+}

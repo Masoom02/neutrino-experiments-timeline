@@ -1,0 +1,37 @@
+{
+  "name": "Example Experiment",
+  "startYear": 2000,
+  "endYear": 2020,
+  "sources": ["solar", "atmospheric"],
+  "energy": "1-100 GeV",
+  "location": "Location, Country",
+  "physics": "Main physics goals",
+  "flavor": "Neutrino flavors detected",
+  "collaborationSize": 100,
+  "leadCountry": "Country",
+  "status": "Active/Completed/Planned",
+  "type": "primary type",
+  "currentStatus": "Current state description",
+  
+  "enhancedData": {
+    "oscillationParameters": {
+      "measured": ["Δm²₂₃", "sin²2θ₂₃"],
+      "precision": "Precision level achieved"
+    },
+    "interactionChannels": ["CC", "NC", "ES"],
+    "detectionMethod": "Technology used",
+    "anomalies": {
+      "discovered": ["Anomaly name if any"],
+      "confirmed": ["Previously known anomalies confirmed"],
+      "resolved": ["Anomalies this helped resolve"]
+    },
+    "keyResults": [
+      "Major result 1",
+      "Major result 2"
+    ],
+    "publications": {
+      "majorPapers": 50,
+      "citations": 5000
+    }
+  }
+}
